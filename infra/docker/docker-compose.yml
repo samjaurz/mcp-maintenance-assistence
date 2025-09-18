@@ -1,0 +1,11 @@
+services:
+
+  db:
+    image: postgres
+    restart: always
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: mcp-chunks
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root

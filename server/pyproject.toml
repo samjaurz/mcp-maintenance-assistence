@@ -15,7 +15,11 @@ dependencies = [
     "pdfplumber (>=0.11.7,<0.12.0)",
     "langchain (>=0.3.27,<0.4.0)",
     "tiktoken (>=0.11.0,<0.12.0)",
-    "sentence-transformers (>=5.1.0,<6.0.0)"
+    "sentence-transformers (>=5.1.0,<6.0.0)",
+    "faiss-cpu (>=1.12.0,<2.0.0)",
+    "gpt4all (>=2.8.2,<3.0.0)",
+    "llama-cpp-python (==0.1.78)",
+    "python-dotenv (>=1.1.1,<2.0.0)",
 ]
 
 [build-system]
