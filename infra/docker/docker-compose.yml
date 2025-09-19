@@ -2,10 +2,11 @@ services:
 
   db:
     image: postgres
+    container_name: mcp-db
     restart: always
     ports:
-      - "5433:5432"
+      - "5432:5432"
     environment:
-      POSTGRES_DB: mcp-chunks
+      POSTGRES_DB: mcp-db
       POSTGRES_USER: root
       POSTGRES_PASSWORD: root
