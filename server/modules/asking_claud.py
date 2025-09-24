@@ -29,9 +29,7 @@ class AskingCloud:
 
     def search(self, query, top_k=3):
         query_emb = self.model.encode([query]).astype("float32")
-
         D, I = self.index.search(query_emb, top_k)
-
         valid_ids = [int(idx) for idx in I[0] if idx != -1]
         if not valid_ids:
             print("⚠️ No se encontraron resultados en FAISS")

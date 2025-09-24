@@ -1,7 +1,13 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+
+from server.database.models import Chunk
+from server.gateways.ClaudeGateway import ClaudeGateway
 from server.modules.asking_claud import AskingCloud
+from server.modules.assistant import Assistant
+from server.repositories.chunk_repository import ChunkRepository
+
 app = FastAPI()
 
 app.add_middleware(
@@ -26,4 +32,13 @@ def send_text(data: TextRequest):
     top_chunks = cloud.search(data.text, top_k=2)
     print(f"Buscando: {data.text}")
     answer = cloud.ask_anthropic(data.text, top_chunks)
+    return {"message": answer}
+
+@app.post("/send-text2")
+def send_text(data: TextRequest):
+    assistant = Assistant(llm_gateway=ClaudeGateway(
+        client=Antropik(),
+        chunk_repo=ChunkRepository(session="")
+    ))
+    answer = assistant.ask_question(data.text)
     return {"message": answer}
