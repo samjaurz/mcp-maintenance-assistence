@@ -1,31 +1,35 @@
-import os
 import pdfplumber
 from sentence_transformers import SentenceTransformer
 import faiss
 import datetime
-from llama_cpp import Llama
-
+import anthropic
+import os
+from dotenv import load_dotenv
+from server.database.db_session import with_db_session
 
 model_embed = SentenceTransformer("all-MiniLM-L6-v2")
 dimension = 384
 index = faiss.IndexFlatL2(dimension)
+
 chunks_list = []
 
-MANUALS_FOLDER = "../manuals/"
-#
-#
-# llama_model_path = "../LLM/llama-7b.ggmlv3.q4_0.bin"
-# llm = Llama(model_path=llama_model_path)
 
+load_dotenv()
+api_key_anthropic = os.getenv("ANTHROPIC_API_KEY")
 
-# def reading_file(pdf_path):
-#     text = ''
-#     with pdfplumber.open(pdf_path) as pdf:
-#         for page in pdf.pages:
-#             page_text = page.extract_text()
-#             if page_text:
-#                 text += page_text + "\n"
-#     return text
+client = anthropic.Anthropic(
+    api_key=api_key_anthropic,
+)
+
+def reading_file(pdf_path):
+    text = ""
+    with pdfplumber.open(pdf_path) as pdf:
+        for page in pdf.pages:
+            page_text = page.extract_text()
+            if page_text:
+                text += page_text + "\n"
+    return text
+
 
 
 def process_chunks(text, source="manual.pdf", chunk_size=400, overlap=50):
@@ -43,10 +47,10 @@ def process_chunks(text, source="manual.pdf", chunk_size=400, overlap=50):
             "id": chunk_id,
             "text": chunk_text,
             "source": source,
-            "type": type,
             "date_added": datetime.datetime.now().isoformat(),
         }
         chunks_list.append(chunk_data)
+
 
         embedding = model_embed.encode([chunk_text]).astype("float32")
         index.add(embedding)
@@ -57,16 +61,6 @@ def process_chunks(text, source="manual.pdf", chunk_size=400, overlap=50):
     return chunks
 
 
-# def process_manuals(folder=MANUALS_FOLDER):
-#     for filename in os.listdir(folder):
-#         if filename.endswith(".pdf"):
-#             path = os.path.join(folder, filename)
-#             text = reading_file(path)
-#             process_chunks(text, source=filename)
-#             print(f"Procesado {filename}")
-#
-
-
 def search(query, top_k=3):
     query_emb = model_embed.encode([query]).astype("float32")
     D, I = index.search(query_emb, top_k)
@@ -74,25 +68,38 @@ def search(query, top_k=3):
     return results
 
 
-def ask_llama(query, top_chunks):
+def ask_anthropic(query, top_chunks):
     context = "\n".join([c["text"] for c in top_chunks])
-    prompt = f"Usa la información siguiente para responder la pregunta de manera clara y concisa:\n\n{context}\n\nPregunta: {query}\nRespuesta:"
+    prompt = f"""Usa la información siguiente para responder de manera clara y concisa:
 
-    response = llm(prompt, max_tokens=512)
+    Contexto:
+    {context}
 
-    return response["choices"][0]["text"]
+    Pregunta:
+    {query}
+
+    Respuesta:"""
+
+    response = client.messages.create(
+        model="claude-3-haiku-20240307",
+        max_tokens=512,
+        messages=[{"role": "user", "content": prompt}],
+    )
+
+    return response.content[0].text
 
 
 if __name__ == "__main__":
-    process_manuals()
+
+    pdf_path = "../manuals/valvulas.pdf"
+    text = reading_file(pdf_path)
+    process_chunks(text, source=pdf_path)
 
     print(f"\nNúmero total de chunks: {len(chunks_list)}")
     print(f"Número total de embeddings en FAISS: {index.ntotal}")
 
-    query = "Dime qué hay sobre la batería"
-
+    query = "Cuales son las especificaciones de entrada y salida de la valvula"
     top_chunks = search(query, top_k=2)
-
-    answer = ask_llama(query, top_chunks)
+    answer = ask_anthropic(query, top_chunks)
 
     print("RESPUESTA:", answer)

@@ -1,27 +1,27 @@
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import String, DateTime, func, ForeignKey
+from sqlalchemy import String, DateTime, func
 import datetime
 from . import Base
 
 
-class Chunk(Base):
-    __tablename__ = "chunks"
+class Manual(Base):
+    __tablename__ = "manuals"
     id: Mapped[int] = mapped_column(primary_key=True)
-    text: Mapped[str] = mapped_column(String)
+    name: Mapped[str] = mapped_column(String)
     source: Mapped[str] = mapped_column(String)
     added_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now()
     )
 
-    manual_id: Mapped[int] = mapped_column(ForeignKey("manuals.id"))
-
-    manual: Mapped["Manuals"] = relationship(back_populates="chunk")
+    chunk: Mapped[list["Chunk"]] = relationship(
+        "Chunk", back_populates="manual", order_by="Chunk.id"
+    )
 
     def __repr__(self) -> str:
         return (
-            f"<Chunk "
+            f"<Manual "
             f"id={self.id}, "
-            f"text={self.text}, "
+            f"name={self.name}, "
             f"source={self.source}, "
             f"added_at={self.added_at}>"
         )
@@ -29,7 +29,7 @@ class Chunk(Base):
     def to_dict(self) -> dict:
         return {
             "id": self.id,
-            "text": self.text,
+            "name": self.name,
             "source": self.source,
             "added_at": self.added_at.isoformat(),
         }
