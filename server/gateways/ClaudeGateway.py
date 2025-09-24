@@ -52,4 +52,3 @@ class ClaudeGateway(LLMGateway):
             messages=[{"role": "user", "content":  self._build_prompt(prompt, context)}],
         )
         return response.content[0].text
-

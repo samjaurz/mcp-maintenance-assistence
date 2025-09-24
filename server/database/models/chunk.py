@@ -15,7 +15,7 @@ class Chunk(Base):
 
     manual_id: Mapped[int] = mapped_column(ForeignKey("manuals.id"))
 
-    manual: Mapped["Manuals"] = relationship(back_populates="chunk")
+    manual: Mapped["Manual"] = relationship(back_populates="chunk")
 
     def __repr__(self) -> str:
         return (

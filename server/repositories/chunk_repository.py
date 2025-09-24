@@ -7,9 +7,9 @@ class ChunkRepository:
     def __init__(self, session: Session):
         self.session = session
 
-    def add_chunk(self, text: str, source: str) -> Chunk:
+    def add_chunk(self, text: str, source: str, manual_id: int) -> Chunk:
         now = datetime.now()
-        chunk = Chunk(text=text, source=source, added_at=now)
+        chunk = Chunk(text=text, source=source, manual_id=manual_id, added_at=now)
         self.session.add(chunk)
         self.session.commit()
         return chunk
