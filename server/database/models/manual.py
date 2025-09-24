@@ -14,7 +14,9 @@ class Manual(Base):
     )
 
     chunk: Mapped[list["Chunk"]] = relationship(
-        "Chunk", back_populates="manual", order_by="Chunk.id"
+        back_populates="manual",
+        order_by="Chunk.id",
+        cascade="all, delete"
     )
 
     def __repr__(self) -> str:
