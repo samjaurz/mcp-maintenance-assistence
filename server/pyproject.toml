@@ -22,6 +22,7 @@ dependencies = [
     "alembic (>=1.16.5,<2.0.0)",
     "fastapi (>=0.117.1,<0.118.0)",
     "uvicorn[standard] (>=0.36.0,<0.37.0)",
+    "python-multipart (>=0.0.20,<0.0.21)",
 ]
 
 [build-system]

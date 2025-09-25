@@ -2,7 +2,7 @@ from server.gateways.FaisGateway import FaisGateway
 from server.gateways.LLMGateway import LLMGateway
 from server.repositories.chunk_repository import ChunkRepository
 from  anthropic import Anthropic
-
+from server.modules.faiss_module import FaissModule
 class ClaudeGateway(LLMGateway):
     def __init__(self,
                  client: Anthropic,
@@ -11,7 +11,7 @@ class ClaudeGateway(LLMGateway):
                  ):
         self.client = client
         self.chunk_repo = chunk_repo
-        self.fais_gw = fais_gw
+        self.fais_gw = FaissModule()
         self.model_name = "claude-3-haiku-20240307"
         self.max_tokens = 512
 

@@ -20,10 +20,11 @@ class ManualRepository:
     def get_all_manuals(self)  -> list[Type[Manual]] | None:
         return self.session.query(Manual).order_by(Manual.id).all()
 
-    def remove_manual(self, manual_id: int) -> bool:
+    def delete_manual(self, manual_id: int) -> bool:
         manual = self.session.query(Manual).filter_by(id=manual_id).first()
         if manual:
             self.session.delete(manual)
             self.session.commit()
             return True
         return False
+

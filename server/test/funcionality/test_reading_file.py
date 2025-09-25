@@ -8,7 +8,7 @@ def test_reading_files_real():
         "/Users/sam/Desktop/github/mpc_maintenance_assistence/manuals/macbook-info.pdf"
     )
 
-    text = ProcessorPDF(pdf_path)
+    text = ProcessorPDF()
     a = ProcessorPDF.divide_pdf_in_chunks(text)
     print(a)
 
