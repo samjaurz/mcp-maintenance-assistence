@@ -7,8 +7,9 @@ from server.repositories.chunk_repository import ChunkRepository
 from server.modules.faiss_module import FaissModule
 
 from server.modules.embedding_module import EmbeddingModule
+
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
-os.environ['OMP_NUM_THREADS'] = '1'
+os.environ["OMP_NUM_THREADS"] = "1"
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
 load_dotenv()
@@ -17,18 +18,13 @@ client = anthropic.Anthropic(api_key=api_key_anthropic)
 
 
 class AskingCloud:
-    def __init__(self,
-                 faiss_index_path="/Users/sam/Desktop/github/mpc_maintenance_assistence/server/llm/faiss_index.bin"):
+    def __init__(self):
         self.model = SentenceTransformer("all-MiniLM-L6-v2", device="cpu")
-        self.faiss_index_path = faiss_index_path
         self.embedding = EmbeddingModule()
         self.faiss = FaissModule()
 
     def search(self, query, top_k=3):
         query_embedding = self.embedding.vectorize_text(query)
-        self.faiss.load_bin()
-        # D, I = self.index.search(query_embedding, top_k)
-        # valid_ids = [int(idx) for idx in I[0] if idx != -1]
         valid_ids = self.faiss.search(query_embedding, top_k)
         if not valid_ids:
             print("⚠️ No se encontraron resultados en FAISS")
@@ -43,7 +39,9 @@ class AskingCloud:
         if chunks:
             print("Chunks recuperados de la BD:", [c.id for c in chunks])
         else:
-            print("⚠️ La consulta a la BD no recuperó ningún chunk. Valid IDs:", valid_ids)
+            print(
+                "⚠️ La consulta a la BD no recuperó ningún chunk. Valid IDs:", valid_ids
+            )
 
         return chunks
 

@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from datetime import datetime
 from server.database.models.manual import Manual
 
+
 class ManualRepository:
     def __init__(self, session: Session):
         self.session = session
@@ -17,7 +18,7 @@ class ManualRepository:
     def get_manual_by_name(self, name: str) -> list[Type[Manual]] | None:
         return self.session.query(Manual).filter(Manual.name.ilike(f"%{name}%")).all()
 
-    def get_all_manuals(self)  -> list[Type[Manual]] | None:
+    def get_all_manuals(self) -> list[Type[Manual]] | None:
         return self.session.query(Manual).order_by(Manual.id).all()
 
     def delete_manual(self, manual_id: int) -> bool:
@@ -27,4 +28,3 @@ class ManualRepository:
             self.session.commit()
             return True
         return False
-

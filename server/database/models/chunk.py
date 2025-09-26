@@ -13,9 +13,7 @@ class Chunk(Base):
         DateTime(timezone=True), server_default=func.now()
     )
 
-    manual_id: Mapped[int] = mapped_column(
-        ForeignKey("manuals.id",ondelete="CASCADE")
-    )
+    manual_id: Mapped[int] = mapped_column(ForeignKey("manuals.id", ondelete="CASCADE"))
 
     manual: Mapped["Manual"] = relationship(back_populates="chunk")
 

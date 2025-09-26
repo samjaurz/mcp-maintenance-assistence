@@ -1,12 +1,10 @@
 from server.modules.asking_claud import AskingCloud
 
+
 def test_anthropic_response():
     cloud = AskingCloud()
-    query = "top 4 cosas mas relveantes"
+    query = "que hay de sony"
     top_chunks = cloud.search(query, top_k=2)
     answer = cloud.ask_anthropic(query, top_chunks)
 
     print("\nRESPUESTA:", answer)
-
-
-
