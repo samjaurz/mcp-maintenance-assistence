@@ -33,9 +33,6 @@ class AskingCloud:
         with SessionLocal() as db:
             chunks = ChunkRepository(db).get_chunks_ids(valid_ids)
 
-        print(f"🔎 Consulta: '{query}'")
-        print("IDs encontrados en FAISS:", valid_ids)
-
         if chunks:
             print("Chunks recuperados de la BD:", [c.id for c in chunks])
         else:
