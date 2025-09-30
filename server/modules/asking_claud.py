@@ -43,11 +43,20 @@ class AskingCloud:
         return chunks
 
     def ask_anthropic(self, query, top_chunks):
-        if not top_chunks:
-            return "No encontré información relevante en la base de datos."
+        # if not top_chunks:
+        #     return "No encontré información relevante en la base de datos."
 
         context = "\n".join([c.text for c in top_chunks])
-        prompt = f"""Usa la información siguiente para responder de manera clara y concisa:
+        prompt = f"""
+        Responde de manera clara y concisa siguiendo estas reglas estrictas:
+
+        1. Si el contexto contiene información relevante para responder la pregunta, usa SOLO esa información.
+        2. Si el contexto está vacío o no contiene información relevante, responde EXACTAMENTE en el siguiente formato:
+
+        No se encontró información en los manuales.  
+        Pero basado en LLM: [respuesta del modelo]
+
+        No agregues introducciones ni frases adicionales fuera de este formato.
 
         Contexto:
         {context}
@@ -55,7 +64,8 @@ class AskingCloud:
         Pregunta:
         {query}
 
-        Respuesta:"""
+        Respuesta:
+        """
 
         response = client.messages.create(
             model="claude-3-haiku-20240307",

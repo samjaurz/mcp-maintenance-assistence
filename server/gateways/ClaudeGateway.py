@@ -39,8 +39,8 @@ class ClaudeGateway(LLMGateway):
                 Respuesta:"""
 
     def ask_model(self, prompt, top_chunks):
-        if not top_chunks:
-            return "No encontré información relevante en la base de datos."
+        # if not top_chunks:
+        #     return "No encontré información relevante en la base de datos."
 
         context = "\n".join([c.text for c in top_chunks])
         response = self.client.messages.create(

@@ -17,7 +17,8 @@ class MotorClaude(InterfaceLLM):
         self.client = anthropic.Anthropic(api_key=api_key_anthropic)
 
     def _build_prompt(self, prompt, context):
-        return f"""Usa la información siguiente para responder de manera clara y concisa:
+        return f"""Usa la información siguiente para responder de manera clara dando prioridad 
+                a los chunks recuperados, puedes completar con conocimiento general de LLM 
 
                 Contexto:
                 {context}
