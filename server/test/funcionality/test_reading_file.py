@@ -1,4 +1,3 @@
-
 from sqlalchemy.orm import Session
 from starlette.datastructures import UploadFile
 
@@ -8,14 +7,14 @@ from server.modules.pdf_processor import ProcessorPDF
 
 def test_reading_files_real():
     pdf_path = (
-        "/Users/sam/Desktop/github/mpc_maintenance_assistence/manuals/macbook-info.pdf"
+        "/Users/sam/Desktop/github/mpc_maintenance_assistence/manuals/variador_frecuencia_fr-f800.pdf"
     )
 
     session: Session = next(get_session())
 
     try:
         with open(pdf_path, "rb") as f:
-            upload_file = UploadFile(filename="macbook-info.pdf", file=f)
+            upload_file = UploadFile(filename="variador_frecuencia_fr-f800.pdf", file=f)
 
             processor = ProcessorPDF(upload_file)
 

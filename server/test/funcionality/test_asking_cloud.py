@@ -3,8 +3,8 @@ from server.modules.asking_claud import AskingCloud
 
 def test_anthropic_response():
     cloud = AskingCloud()
-    query = "que hay de sony"
+    query = "dime 3 cosas de variadores"
     top_chunks = cloud.search(query, top_k=2)
-    answer = cloud.ask_anthropic(query, top_chunks)
+    # answer = cloud.ask_anthropic(query, top_chunks)
 
-    print("\nRESPUESTA:", answer)
+    print("\nRESPUESTA:", top_chunks)

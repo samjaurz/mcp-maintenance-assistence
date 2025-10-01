@@ -1,5 +1,5 @@
 from datetime import datetime
-
+from pgvector.sqlalchemy import Vector
 from sqlalchemy import DateTime, ForeignKey, String, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -10,7 +10,7 @@ class Chunk(Base):
     __tablename__ = "chunks"
     id: Mapped[int] = mapped_column(primary_key=True)
     text: Mapped[str] = mapped_column(String)
-    source: Mapped[str] = mapped_column(String)
+    embedding: Mapped[list[float]] = mapped_column(Vector(384))
     added_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now()
     )
@@ -24,7 +24,6 @@ class Chunk(Base):
             f"<Chunk "
             f"id={self.id}, "
             f"text={self.text}, "
-            f"source={self.source}, "
             f"added_at={self.added_at}>"
         )
 
@@ -32,6 +31,5 @@ class Chunk(Base):
         return {
             "id": self.id,
             "text": self.text,
-            "source": self.source,
             "added_at": self.added_at.isoformat(),
         }
