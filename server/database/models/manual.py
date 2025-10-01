@@ -1,5 +1,3 @@
-
-
 from datetime import datetime
 
 from sqlalchemy import DateTime, String, func
@@ -12,7 +10,8 @@ class Manual(Base):
     __tablename__ = "manuals"
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String)
-    source: Mapped[str] = mapped_column(String)
+    source_url: Mapped[str] = mapped_column(String)
+    category: Mapped[str] = mapped_column(String)
     added_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now()
     )
@@ -26,7 +25,8 @@ class Manual(Base):
             f"<Manual "
             f"id={self.id}, "
             f"name={self.name}, "
-            f"source={self.source}, "
+            f"source_url={self.source_url}, "
+            f"category={self.category}, "
             f"added_at={self.added_at}>"
         )
 
@@ -34,6 +34,7 @@ class Manual(Base):
         return {
             "id": self.id,
             "name": self.name,
-            "source": self.source,
+            "source_url": self.source_url,
+            "category": self.category,
             "added_at": self.added_at.isoformat(),
         }

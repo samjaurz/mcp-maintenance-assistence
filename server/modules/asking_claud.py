@@ -26,22 +26,14 @@ class AskingCloud:
 
     def search(self, query, top_k=3):
         query_embedding = self.embedding.vectorize_text(query)
-        valid_ids = self.faiss.search(query_embedding, top_k)
-        if not valid_ids:
-            print("⚠️ No se encontraron resultados en FAISS")
-            return []
-
+        query_vector_list = query_embedding.flatten().tolist()
         with SessionLocal() as db:
-            chunks = ChunkRepository(db).get_chunks_ids(valid_ids)
+            relevant_chunks = ChunkRepository(db).search_similar_chunks(
+            query_embedding=query_vector_list,
+            top_k=top_k
+        )
 
-        if chunks:
-            print("Chunks recuperados de la BD:", [c.id for c in chunks])
-        else:
-            print(
-                "⚠️ La consulta a la BD no recuperó ningún chunk. Valid IDs:", valid_ids
-            )
-
-        return chunks
+        return relevant_chunks
 
     def ask_anthropic(self, query, top_chunks):
         # if not top_chunks:

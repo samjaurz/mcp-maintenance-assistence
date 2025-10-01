@@ -9,15 +9,14 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from sqlalchemy.orm import Session
 
 from server.modules.embedding_module import EmbeddingModule
-from server.modules.faiss_module import FaissModule
+# from server.modules.faiss_module import FaissModule
 from server.repositories.chunk_repository import ChunkRepository
 from server.repositories.manual_repository import ManualRepository
-
 
 class ProcessorPDF:
     def __init__(self, file: UploadFile):
         self.file = file
-        self.faiss = FaissModule()
+        # self.faiss = FaissModule()
         self.embedding = EmbeddingModule()
 
     def process_and_embedding_pdf(self, session: Session) -> dict:
@@ -71,18 +70,44 @@ class ProcessorPDF:
 
         pdf_name = self.file.filename
         chunk_repository = ChunkRepository(session)
+        manual_repository = ManualRepository(session)
 
-        # TODO: The logic for creating the manual doesn’t convince me, but I need the manual ID for the 1:n relationship with the chunks.
-        #  Ideally, the manual should be created at the end, once everything has been generated. maybe add pages,chunk_totals, chunk_start, chunk_finish
+        # --- 1. Crear el Manual (AÑADIR a la sesión, NO hacer COMMIT) ---
+        # Asumimos que .add_manual ahora solo hace session.add(new_manual)
+        new_manual = manual_repository.add_manual(
+            name=pdf_name,
+            category="timer",
+            source_url=self.file.filename
+        )
 
-        new_manual = ManualRepository(session).add_manual(pdf_name, self.file.filename)
+        # Inicializar lista para llevar el conteo/referencia
+        successful_chunks = []
 
-        for chunk in chunks:
-            create_chunk = chunk_repository.add_chunk(
-                text=chunk,
-                source=pdf_name,
-                manual_id=new_manual.id,
-            )
-            embedding = self.embedding.vectorize_text(chunk)
-            self.faiss.add_vector(embedding, create_chunk.id)
-        self.faiss.save_bin()
+        # --- 2. Iterar, Vectorizar y Añadir Chunks ---
+        try:
+            for chunk in chunks:
+                embedding_array = self.embedding.vectorize_text(chunk)
+                embedding_list = embedding_array.flatten().tolist()
+
+                new_chunk = chunk_repository.add_chunk(
+                    text=chunk,
+                    embedding=embedding_list,
+                    manual_id=new_manual.id,
+                )
+                successful_chunks.append(new_chunk)
+
+            # --- 3. COMMIT ÚNICO Y FINAL (SOLO si el bucle terminó sin errores) ---
+            session.commit()
+
+        except Exception as e:
+            # --- 4. ROLLBACK si algo falla (ej. error de pgvector, disco, etc.) ---
+            session.rollback()
+            # Opcional: registrar el error 'e'
+            raise e  # Relanzar la excepción para que sea manejada por process_and_embedding_pdf
+
+        # --- 5. Regresar una Confirmación/Resultado ---
+        return {
+            "manual_id": new_manual.id,
+            "chunk_count": len(successful_chunks),
+            "status": "success"
+        }

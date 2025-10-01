@@ -10,9 +10,9 @@ class ManualRepository:
     def __init__(self, session: Session):
         self.session = session
 
-    def add_manual(self, name: str, source: str) -> Manual:
+    def add_manual(self, name: str, source_url: str, category: str) -> Manual:
         now = datetime.now()
-        manual = Manual(name=name, source=source, added_at=now)
+        manual = Manual(name=name, source_url=source_url, category= category, added_at=now)
         self.session.add(manual)
         self.session.commit()
         return manual
