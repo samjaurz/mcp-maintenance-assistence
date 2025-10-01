@@ -1,7 +1,9 @@
 import os
+
 import pytest
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, scoped_session
+from sqlalchemy.orm import scoped_session, sessionmaker
+
 from server.database.models import Base
 
 

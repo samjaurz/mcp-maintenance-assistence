@@ -1,6 +1,7 @@
+import os
+
 import faiss
 import numpy as np
-import os
 
 DIMENSION = 768
 BIN_PATH = (

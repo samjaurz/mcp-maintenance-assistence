@@ -1,9 +1,9 @@
-import os
-import tempfile
-from starlette.datastructures import UploadFile
-from server.modules.pdf_processor import ProcessorPDF
-from server.database.db_session import get_session
+
 from sqlalchemy.orm import Session
+from starlette.datastructures import UploadFile
+
+from server.database.db_session import get_session
+from server.modules.pdf_processor import ProcessorPDF
 
 
 def test_reading_files_real():

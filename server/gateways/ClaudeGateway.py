@@ -1,7 +1,8 @@
-from server.gateways.LLMGateway import LLMGateway
-from server.repositories.chunk_repository import ChunkRepository
 from anthropic import Anthropic
+
+from server.gateways.LLMGateway import LLMGateway
 from server.modules.faiss_module import FaissModule
+from server.repositories.chunk_repository import ChunkRepository
 
 
 class ClaudeGateway(LLMGateway):

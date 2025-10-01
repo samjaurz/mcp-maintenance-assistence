@@ -1,7 +1,9 @@
-from .abstract_llm import InterfaceLLM
-from llama_cpp import Llama
 from pathlib import Path
-from typing import List, Dict, Any, Union
+from typing import Any, Dict, List, Union
+
+from llama_cpp import Llama
+
+from .abstract_llm import InterfaceLLM
 
 LLAMA_MODEL_PATH = Path("../LLM/llama-7b.ggmlv3.q4_0.bin")
 MAX_TOKENS = 512

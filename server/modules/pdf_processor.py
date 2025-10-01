@@ -1,15 +1,17 @@
-import pdfplumber
 import json
 import os
 import tempfile
-from fastapi import UploadFile, HTTPException
+from typing import List
+
+import pdfplumber
+from fastapi import HTTPException, UploadFile
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from sqlalchemy.orm import Session
-from typing import List
+
+from server.modules.embedding_module import EmbeddingModule
+from server.modules.faiss_module import FaissModule
 from server.repositories.chunk_repository import ChunkRepository
 from server.repositories.manual_repository import ManualRepository
-from server.modules.faiss_module import FaissModule
-from server.modules.embedding_module import EmbeddingModule
 
 
 class ProcessorPDF:

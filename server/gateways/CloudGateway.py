@@ -1,10 +1,12 @@
+import os
+from typing import List
+
 from sqlalchemy.orm import Session
-from server.repositories.chunk_repository import ChunkRepository
+
 from server.llm_motors.abstract_llm import InterfaceLLM
 from server.modules.embedding_module import EmbeddingModule
 from server.modules.faiss_module import FaissModule
-from typing import List
-import os
+from server.repositories.chunk_repository import ChunkRepository
 
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 os.environ["OMP_NUM_THREADS"] = "1"

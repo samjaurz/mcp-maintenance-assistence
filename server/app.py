@@ -1,14 +1,13 @@
-from fastapi import FastAPI
+
+from fastapi import Depends, FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from fastapi import FastAPI, UploadFile, File
-from fastapi import Depends
 from sqlalchemy.orm import Session
-from server.modules.asking_claud import AskingCloud
-from server.repositories.manual_repository import ManualRepository
+
 from server.database.db_session import get_session
+from server.modules.asking_claud import AskingCloud
 from server.modules.pdf_processor import ProcessorPDF
-import tempfile
+from server.repositories.manual_repository import ManualRepository
 
 app = FastAPI()
 

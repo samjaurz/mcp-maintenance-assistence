@@ -1,12 +1,13 @@
-from sentence_transformers import SentenceTransformer
-import anthropic
 import os
-from dotenv import load_dotenv
-from server.database.db_session import SessionLocal
-from server.repositories.chunk_repository import ChunkRepository
-from server.modules.faiss_module import FaissModule
 
+import anthropic
+from dotenv import load_dotenv
+from sentence_transformers import SentenceTransformer
+
+from server.database.db_session import SessionLocal
 from server.modules.embedding_module import EmbeddingModule
+from server.modules.faiss_module import FaissModule
+from server.repositories.chunk_repository import ChunkRepository
 
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 os.environ["OMP_NUM_THREADS"] = "1"

@@ -1,6 +1,8 @@
-from typing import Type
-from sqlalchemy.orm import Session
 from datetime import datetime
+from typing import Type
+
+from sqlalchemy.orm import Session
+
 from server.database.models.manual import Manual
 
 

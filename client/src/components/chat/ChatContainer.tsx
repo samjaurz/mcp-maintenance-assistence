@@ -19,7 +19,7 @@ function ChatContainer() {
 
     try {
       const response = await axiosInstance.post("/send-text", { text });
-      const botMsg: MessageType = { role: "bot", text: "Entendido: " + response.data.message };
+      const botMsg: MessageType = { role: "bot", text:  response.data.message };
 
   
       setTimeout(() => {
