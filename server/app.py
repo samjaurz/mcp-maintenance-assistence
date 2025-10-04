@@ -2,14 +2,16 @@ from fastapi import Depends, FastAPI, File, UploadFile, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
-
+from server.modules.pdf_reader import extract_page_data
 from server.database.db_session import get_session
 # from server.modules.asking_claud import AskingCloud
 from server.modules.pdf_processor import ProcessorPDF
 from server.modules.renderizado_pagina import get_rendered_page_url
 from server.repositories.manual_repository import ManualRepository
 from fastapi.responses import FileResponse
-import json
+import time
+from dotenv import load_dotenv
+load_dotenv()
 app = FastAPI()
 
 app.add_middleware(
@@ -58,8 +60,9 @@ def get_all_manuals(db_session: Session = Depends(get_session)):
 async def upload_pdf(
         file: UploadFile = File(...), db_session: Session = Depends(get_session)
 ):
-    processor = ProcessorPDF(file)
-    result = processor.process_and_embedding_pdf(db_session)
+    start = time.time()
+    result = extract_page_data(file)
+    print("⏱️ Tiempo de procesamiento:", time.time() - start, "segundos")
     return result
 
 
