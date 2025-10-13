@@ -38,7 +38,6 @@ class PageInfoRequest(BaseModel):
 
 @app.post("/send-text")
 def send_text(data: TextRequest):
-
     cloud = AskingCloud()
     top_chunks = cloud.search(data.text, top_k=3)
     answer = cloud.ask_anthropic(data.text, top_chunks)
@@ -61,8 +60,3 @@ async def upload_pdf(
 @app.delete("/manuals/{manual_id}")
 async def delete_pdf(manual_id: int, db_session: Session = Depends(get_session)):
     return ManualRepository(db_session).delete_manual(manual_id)
-
-@app.get("/manuals/get_manual")
-async def get_manual():
-    file_path = "/Users/sam/Desktop/github/mpc_maintenance_assistence/server/modules/pdf_extraction_results_clean.json"
-    return FileResponse(file_path, media_type="application/json", filename="manual.json")

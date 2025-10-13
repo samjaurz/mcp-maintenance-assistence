@@ -22,38 +22,65 @@ class AskingCloud:
         self.model = SentenceTransformer("all-MiniLM-L6-v2", device="cpu")
         self.embedding = EmbeddingModule()
 
-    def search(self, query, top_k=3):
+    def search(self, query, top_k=2):
         query_embedding = self.embedding.vectorize_text(query)
         query_vector_list = query_embedding.flatten().tolist()
         with SessionLocal() as db:
             relevant_chunks = ChunkRepository(db).search_similar_chunks(
-            query_embedding=query_vector_list,
-            top_k=top_k
-        )
+                query_embedding=query_vector_list,
+                top_k=top_k
+            )
 
         return relevant_chunks
 
     def ask_anthropic(self, query, top_chunks):
-        context = "\n".join([c.text for c in top_chunks])
-        prompt = f"""
-        Responde de manera clara y concisa siguiendo estas reglas estrictas:
+        # Combinar contexto
+        context = "\n".join([c.text for c in top_chunks if c.text.strip()])
 
-        1. Si el contexto contiene información relevante para responder la pregunta, usa SOLO esa información.
-        2. Si el contexto está vacío o no contiene información relevante, responde EXACTAMENTE en el siguiente formato:
+        # Middleware: decidir estructura del prompt según el tipo de pregunta
+        if context:
+            # Si parece que la pregunta es sobre un error, darle formato especial
+            if "error" in query.lower():
+                prompt = f"""
+    Responde de manera clara y precisa siguiendo estas reglas:
 
-        No se encontró información en los manuales.  
-        Pero basado en LLM: [respuesta del modelo]
+    1. Si el contexto contiene pasos para resolver el error, listalos en orden.
+    2. Indica claramente cuál es el error mencionado.
+    3. Usa SOLO la información del contexto.
+    4. No agregues explicaciones adicionales fuera de los pasos.
 
-        No agregues introducciones ni frases adicionales fuera de este formato.
+    Contexto:
+    {context}
 
-        Contexto:
-        {context}
+    Pregunta:
+    {query}
 
-        Pregunta:
-        {query}
+    Respuesta:
+    """
+            else:
+                # Otro tipo de pregunta
+                prompt = f"""
+    Responde usando SOLO la información del contexto. Sé claro y conciso.
 
-        Respuesta:
-        """
+    Contexto:
+    {context}
+
+    Pregunta:
+    {query}
+
+    Respuesta:
+    """
+        else:
+            # No hay información relevante
+            prompt = f"""
+    No se encontró información en los manuales.  
+    Pero basado en LLM: [respuesta del modelo]
+
+    Pregunta:
+    {query}
+
+    Respuesta:
+    """
 
         response = client.messages.create(
             model="claude-3-haiku-20240307",
