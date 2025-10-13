@@ -1,4 +1,3 @@
-
 def test_upload_pdf_pages(client, real_pdf):
     files = {"file": ("variador_frecuencia_fr-f800.pdf", real_pdf, "application/pdf")}
 

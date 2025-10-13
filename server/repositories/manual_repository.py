@@ -18,7 +18,7 @@ class ManualRepository:
         return manual
 
     def get_manual_by_name(self, name: str) -> list[Type[Manual]] | None:
-        return self.session.query(Manual).filter(Manual.name.ilike(f"%{name}%")).all()
+        return self.session.query(Manual).filter(Manual.name.ilike(f"%{name}%")).first()
 
     def get_all_manuals(self) -> list[Type[Manual]] | None:
         return self.session.query(Manual).order_by(Manual.id).all()

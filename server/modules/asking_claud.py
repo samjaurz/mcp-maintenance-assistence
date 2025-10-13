@@ -6,7 +6,6 @@ from sentence_transformers import SentenceTransformer
 
 from server.database.db_session import SessionLocal
 from server.modules.embedding_module import EmbeddingModule
-from server.modules.faiss_module import FaissModule
 from server.repositories.chunk_repository import ChunkRepository
 
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
@@ -22,7 +21,6 @@ class AskingCloud:
     def __init__(self):
         self.model = SentenceTransformer("all-MiniLM-L6-v2", device="cpu")
         self.embedding = EmbeddingModule()
-        self.faiss = FaissModule()
 
     def search(self, query, top_k=3):
         query_embedding = self.embedding.vectorize_text(query)
@@ -36,9 +34,6 @@ class AskingCloud:
         return relevant_chunks
 
     def ask_anthropic(self, query, top_chunks):
-        # if not top_chunks:
-        #     return "No encontré información relevante en la base de datos."
-
         context = "\n".join([c.text for c in top_chunks])
         prompt = f"""
         Responde de manera clara y concisa siguiendo estas reglas estrictas:

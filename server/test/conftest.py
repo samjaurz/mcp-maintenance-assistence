@@ -6,7 +6,8 @@ from server.app import app
 from server.database.models import Base
 from server.database.db_session import get_session
 
-TEST_DATABASE_URL = "sqlite:///:memory:"
+# TEST_DATABASE_URL = "sqlite:///:memory:"
+TEST_DATABASE_URL = "sqlite:///./test_db.sqlite"
 engine = create_engine(TEST_DATABASE_URL, connect_args={"check_same_thread": False})
 TestingSessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False)
 

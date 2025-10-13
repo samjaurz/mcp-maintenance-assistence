@@ -34,7 +34,7 @@ function ChatContainer() {
   };
 
   return (
-    <div className="flex flex-col w-full h-screen border rounded">
+    <div className="flex flex-col w-full "  style={{ height: "calc(100vh - 75px)" }}>
       <MessageList messages={messages} />
       <ChatInput onSend={handleSend} />
     </div>
