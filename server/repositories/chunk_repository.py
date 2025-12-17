@@ -2,7 +2,7 @@ from datetime import datetime
 
 from sqlalchemy.orm import Session
 
-from server.database.models.chunk import Chunk
+from database.models.chunk import Chunk
 from typing import List
 
 class ChunkRepository:

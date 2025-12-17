@@ -2,10 +2,10 @@ from fastapi import Depends, FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
-from server.database.db_session import get_session
-from server.modules.asking_claud import AskingCloud
-from server.modules.pdf_processor import ProcessorPDF
-from server.repositories.manual_repository import ManualRepository
+from database.db_session import get_session
+from modules.asking_claud import AskingCloud
+from modules.pdf_processor import ProcessorPDF
+from repositories.manual_repository import ManualRepository
 from fastapi.responses import FileResponse
 from dotenv import load_dotenv
 load_dotenv()

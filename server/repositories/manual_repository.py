@@ -3,7 +3,7 @@ from typing import Type
 
 from sqlalchemy.orm import Session
 
-from server.database.models.manual import Manual
+from database.models.manual import Manual
 
 
 class ManualRepository:

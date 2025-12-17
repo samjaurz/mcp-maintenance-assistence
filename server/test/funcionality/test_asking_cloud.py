@@ -1,4 +1,4 @@
-from server.modules.asking_claud import AskingCloud
+from modules.asking_claud import AskingCloud
 
 def test_anthropic_response():
     cloud = AskingCloud()

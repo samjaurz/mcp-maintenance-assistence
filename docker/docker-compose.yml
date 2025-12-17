@@ -5,7 +5,7 @@ services:
     container_name: mcp-db
     restart: always
     ports:
-      - "5432:5432"
+      - "5433:5432"
     environment:
       POSTGRES_DB: mcp-db
       POSTGRES_USER: root

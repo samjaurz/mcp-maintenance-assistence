@@ -4,9 +4,9 @@ import anthropic
 from dotenv import load_dotenv
 from sentence_transformers import SentenceTransformer
 
-from server.database.db_session import SessionLocal
-from server.modules.embedding_module import EmbeddingModule
-from server.repositories.chunk_repository import ChunkRepository
+from database.db_session import SessionLocal
+from modules.embedding_module import EmbeddingModule
+from repositories.chunk_repository import ChunkRepository
 
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 os.environ["OMP_NUM_THREADS"] = "1"

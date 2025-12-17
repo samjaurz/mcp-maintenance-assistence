@@ -7,10 +7,9 @@ import pdfplumber
 from fastapi import HTTPException, UploadFile
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from sqlalchemy.orm import Session
-
-from server.modules.embedding_module import EmbeddingModule
-from server.repositories.chunk_repository import ChunkRepository
-from server.repositories.manual_repository import ManualRepository
+from modules.embedding_module import EmbeddingModule
+from repositories.chunk_repository import ChunkRepository
+from repositories.manual_repository import ManualRepository
 
 class ProcessorPDF:
     def __init__(self, file: UploadFile):

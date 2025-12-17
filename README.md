@@ -3,7 +3,7 @@ docker-compose -p inventory up -d
 
 
 uv sync
- uvicorn main:app --reload
+uvicorn main:app --reload
 
 migrations commands
 alembic revision --autogenerate -m "init"

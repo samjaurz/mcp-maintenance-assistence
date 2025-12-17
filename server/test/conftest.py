@@ -2,12 +2,12 @@ import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from server.app import app
-from server.database.models import Base
-from server.database.db_session import get_session
+from app import app
+from database.models import Base
+from database.db_session import get_session
 
-# TEST_DATABASE_URL = "sqlite:///:memory:"
-TEST_DATABASE_URL = "sqlite:///./test_db.sqlite"
+
+TEST_DATABASE_URL = "sqlite:///:memory"
 engine = create_engine(TEST_DATABASE_URL, connect_args={"check_same_thread": False})
 TestingSessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False)
 
