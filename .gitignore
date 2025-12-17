@@ -7,3 +7,5 @@ versions
 
 manuals
 LLM
+
+.terraform/
