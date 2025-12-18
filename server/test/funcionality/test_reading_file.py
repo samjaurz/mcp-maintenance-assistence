@@ -7,4 +7,5 @@ def test_upload_pdf_pages(client, real_pdf):
 
 
 
-
+if __name__ == "__main__":
+    test_upload_pdf_pages()

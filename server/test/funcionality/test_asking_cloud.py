@@ -8,3 +8,6 @@ def test_anthropic_response():
 
     print("\nRESPUESTA:", top_chunks)
     print(answer)
+
+if __name__ == "__main__":
+    test_anthropic_response()
