@@ -34,53 +34,30 @@ class AskingCloud:
         return relevant_chunks
 
     def ask_anthropic(self, query, top_chunks):
-        # Combinar contexto
+
         context = "\n".join([c.text for c in top_chunks if c.text.strip()])
 
-        # Middleware: decidir estructura del prompt según el tipo de pregunta
-        if context:
-            # Si parece que la pregunta es sobre un error, darle formato especial
-            if "error" in query.lower():
-                prompt = f"""
-    Responde de manera clara y precisa siguiendo estas reglas:
+        prompt = f"""
+        Eres un ingeniero mecánico senior especializado en diagnóstico de fallas.
 
-    1. Si el contexto contiene pasos para resolver el error, listalos en orden.
-    2. Indica claramente cuál es el error mencionado.
-    3. Usa SOLO la información del contexto.
-    4. No agregues explicaciones adicionales fuera de los pasos.
+        INFORMACIÓN DE MANUALES:
+        {context}
 
-    Contexto:
-    {context}
+        FALLA REPORTADA:
+        {query}
 
-    Pregunta:
-    {query}
-
-    Respuesta:
-    """
-            else:
-                # Otro tipo de pregunta
-                prompt = f"""
-    Responde usando SOLO la información del contexto. Sé claro y conciso.
-
-    Contexto:
-    {context}
-
-    Pregunta:
-    {query}
-
-    Respuesta:
-    """
-        else:
-            # No hay información relevante
-            prompt = f"""
-    No se encontró información en los manuales.  
-    Pero basado en LLM: [respuesta del modelo]
-
-    Pregunta:
-    {query}
-
-    Respuesta:
-    """
+        Responde como ingeniero priorizando lo siguiente en orden no 
+        hace falta que pongas los numeros solo que se entienda la separacion si no se encuentra 
+        nada en el contexto relevante indicar en refrencia a los manuales que no hay nada, y si en base a que manual:
+        
+        1. Diagnóstico probable (con probabilidad %)
+        2. Pasos para verificar
+        3. Solución recomendada
+        4. Tiempo y costo estimado
+        5. Referencias a manuales
+        
+        Respuesta: 
+        """
 
         response = client.messages.create(
             model="claude-3-haiku-20240307",
